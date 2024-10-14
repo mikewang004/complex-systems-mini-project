@@ -4,9 +4,8 @@ import scipy as sp
 
 
 N = 100
-g = 2
+g = 1
 mu = 0
-sigma = g / np.sqrt(N)
 tau = 1
 h = 0.01
 rng = np.random.default_rng()
@@ -22,8 +21,15 @@ def phi(x):
     return np.tanh(x)
 
 
+
+
 def dr_dt(r, phi, J, tau):
-    return (-r + J @ phi(r)) / tau
+    drdt = np.zeros(N)
+    for i in range(N):
+        sum_j = np.sum(J[i, :] * phi(r))  # Summation over j
+        drdt[i] = (-r[i] + sum_j) / tau
+        r[i] = drdt[i]
+    return drdt
 
 
 def runge_kutta(x, phi, J, tau):
@@ -35,16 +41,35 @@ def runge_kutta(x, phi, J, tau):
     return x_new
 
 
-steps = 1000
+steps = 10000
 
-x = np.random.randint(0, 2, N).T
-J = generate_J(N, mu, sigma)
-x_norm = np.zeros([steps])
+def run_simulation(N,steps, phi, tau, mu, g):
+    sigma = g / np.sqrt(N)
+    x = np.random.uniform(-1, 2, N).T
+    J = generate_J(N, mu, sigma**2)
+    x_norm = np.zeros([steps])
 
-for i in range(0, steps):
-    x = runge_kutta(x, phi, J, tau)
-    x_norm[i] = np.linalg.norm(x)
+    for i in range(0, steps):
+        x = runge_kutta(x, phi, J, tau)
+        x_norm[i] = np.linalg.norm(x)
+
+    return x_norm
+
+def variable_g_sim(g_arr, x_norm_arr, N, steps, phi, tau, mu, g):
+    for j in range(0, size_g_arr):
+        x_norm_arr[j, :] = run_simulation(N, steps, phi, tau, mu, g)
+
+    return x_norm_arr
+
+size_g_arr = 5
+g_arr = np.linspace(0.8, 1.2, size_g_arr)
+x_norm_arr = np.zeros([size_g_arr, steps])
 
 
-plt.plot(x_norm)
+
+#x_norm = run_simulation(N, steps, phi, tau, mu, g)
+x_norm_arr = variable_g_sim(g_arr, x_norm_arr, N, steps, phi, tau, mu, g)
+for j in range(0, size_g_arr):
+    plt.plot(x_norm_arr[j], label = "g = " + str(g_arr[j]))
+    plt.legend()
 plt.show()

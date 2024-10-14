@@ -6,7 +6,7 @@ import scipy as sp
 N = 100
 g = 1
 mu = 0
-tau = 1
+tau = 1.0
 h = 0.01
 rng = np.random.default_rng()
 
@@ -61,8 +61,8 @@ def variable_g_sim(g_arr, x_norm_arr, N, steps, phi, tau, mu, g):
 
     return x_norm_arr
 
-size_g_arr = 5
-g_arr = np.linspace(0.8, 1.2, size_g_arr)
+size_g_arr = 3
+g_arr = np.array([0.1, 1, 10])
 x_norm_arr = np.zeros([size_g_arr, steps])
 
 

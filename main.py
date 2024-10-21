@@ -26,7 +26,7 @@ def phi(x):
 def dr_dt(r, phi, J, tau):
     drdt = np.zeros(N)
     for i in range(N):
-        sum_j = np.sum(J[i, :] * phi(r))  # Summation over j
+        sum_j = np.sum(J[i, :] * phi(r))  
         drdt[i] = (-r[i] + sum_j) / tau
         r[i] = drdt[i]
     return drdt
@@ -41,11 +41,11 @@ def runge_kutta(x, phi, J, tau):
     return x_new
 
 
-steps = 10000
+steps = 1000
 
 def run_simulation(N,steps, phi, tau, mu, g):
     sigma = g / np.sqrt(N)
-    x = np.random.uniform(-1, 2, N).T
+    x = np.random.uniform(-1, 1, N).T
     J = generate_J(N, mu, sigma**2)
     x_norm = np.zeros([steps])
 
@@ -57,7 +57,7 @@ def run_simulation(N,steps, phi, tau, mu, g):
 
 def variable_g_sim(g_arr, x_norm_arr, N, steps, phi, tau, mu, g):
     for j in range(0, size_g_arr):
-        x_norm_arr[j, :] = run_simulation(N, steps, phi, tau, mu, g)
+        x_norm_arr[j, :] = run_simulation(N, steps, phi, tau, mu, g_arr[j])
 
     return x_norm_arr
 

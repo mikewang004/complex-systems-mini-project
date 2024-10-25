@@ -63,14 +63,27 @@ def variable_g_sim(g_arr, N, steps, tau, mu):
     return x_norm_arr
 
 
-g_arr = np.array([0.9, 1.0, 1.1])
+#g_arr = np.array([0.9, 1.0, 1.1])
+g_arr = np.linspace(0.0, 2, 100)
 
 x_norm_arr = variable_g_sim(g_arr, N, steps, tau, mu)
+print(x_norm_arr)
 
-for j in range(len(g_arr)):
-    plt.plot(x_norm_arr[j], label=f"g = {g_arr[j]}")
-plt.legend()
-plt.xlabel("Time steps")
-plt.ylabel("Norm of activity vector")
-plt.title("Neural Network Dynamics for Different g")
-plt.show()
+def plot_time_vs_xnorm(g_arr, x_norm_arr):
+    for j in range(len(g_arr)):
+        plt.plot(x_norm_arr[j], label=f"g = {g_arr[j]}")
+    plt.legend()
+    plt.xlabel("Time steps")
+    plt.ylabel("Norm of activity vector")
+    plt.title("Neural Network Dynamics for Different g")
+    #plt.savefig("exc1.png")
+    plt.show()
+
+def plot_g_vs_norm(g_arr, x_norm_arr, steps):
+    print(g_arr.shape, x_norm_arr.shape)
+    plt.plot(g_arr, np.mean(x_norm_arr[:, int(0.8*steps):], axis = 1))
+    plt.xlabel("g")
+    plt.ylabel("Norm of activity vector")
+    plt.show()
+
+plot_g_vs_norm(g_arr, x_norm_arr, steps)

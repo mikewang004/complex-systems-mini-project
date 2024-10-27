@@ -52,7 +52,6 @@ def run_simulation(N, steps, tau, mu, g):
     for i in range(steps):
         x = runge_kutta(x, J, tau)
         x_norm[i] = np.linalg.norm(x)
-
     return x_norm
 
 
@@ -64,7 +63,7 @@ def variable_g_sim(g_arr, N, steps, tau, mu):
 
 
 #g_arr = np.array([0.9, 1.0, 1.1])
-g_arr = np.linspace(0.0, 2, 100)
+g_arr = np.linspace(0.0, 10.0, 100)
 
 x_norm_arr = variable_g_sim(g_arr, N, steps, tau, mu)
 print(x_norm_arr)
@@ -81,9 +80,11 @@ def plot_time_vs_xnorm(g_arr, x_norm_arr):
 
 def plot_g_vs_norm(g_arr, x_norm_arr, steps):
     print(g_arr.shape, x_norm_arr.shape)
-    plt.plot(g_arr, np.mean(x_norm_arr[:, int(0.8*steps):], axis = 1))
+    plt.plot(g_arr, (x_norm_arr[:, int(0.8*steps):]), marker = ".", linestyle = "None")
+    plt.title("Bifurication diagram of the neuron system")
     plt.xlabel("g")
     plt.ylabel("Norm of activity vector")
+    plt.savefig("exc1-biff.png")
     plt.show()
 
 plot_g_vs_norm(g_arr, x_norm_arr, steps)
